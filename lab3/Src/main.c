@@ -1634,15 +1634,16 @@ void animate(int circles_positions[4][2], int circles_range[2], int* direction, 
   else{
     BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
   }
-
   
-  circles_positions[0][0] += *direction * speed;
+  int speed_ratio = LCD_X_SIZE/LCD_Y_SIZE + 1;
+  
+  circles_positions[0][0] += *direction * speed * speed_ratio;
   circles_positions[0][1] += *direction * speed;
-  circles_positions[1][0] -= *direction * speed;
+  circles_positions[1][0] -= *direction * speed * speed_ratio;
   circles_positions[1][1] += *direction * speed;
-  circles_positions[2][0] -= *direction * speed;
+  circles_positions[2][0] -= *direction * speed * speed_ratio;
   circles_positions[2][1] -= *direction * speed;
-  circles_positions[3][0] += *direction * speed;
+  circles_positions[3][0] += *direction * speed * speed_ratio;
   circles_positions[3][1] -= *direction * speed;
   
 
@@ -1733,18 +1734,17 @@ void StartDefaultTask(void const * argument)
   //draw_background();
   // animation parameters
 
-  int radius = 20;
+  int radius = 15;
   int speed = 1;
-  int circle_positions[4][2]= {{10, 10}, {400, 10}, {400, 400}, {10, 400}};
-  int circle_range[2] = {380, 380};
+  int circle_positions[4][2]= {{radius, radius}, {LCD_X_SIZE-radius, radius}, {LCD_X_SIZE-radius, LCD_Y_SIZE-radius}, {radius, LCD_Y_SIZE-radius}};
+  int circle_range[2] = {radius, LCD_X_SIZE/2 - radius};
   int direction = 1;
   
   /* Infinite loop */
   for(;;)
   {
     HAL_IWDG_Refresh(&hiwdg);
-    osDelay(2);
-    LD1_TOGGLE; /* Just blink to say "I'm alive" */
+    osDelay(5);
     animate(circle_positions, circle_range,&direction,radius, speed);
   }
   /* USER CODE END 5 */ 
